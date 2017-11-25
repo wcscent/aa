@@ -51,7 +51,7 @@ public interface DomainEvent extends Event {
      * The method as an factory method, may return different {@code ApplicationEvent}
      * instance, when current event had different status.
      * <p>
-     * But, in factory, all {@code Event} is an value object.
+     * But, in fact, all {@code Event} is an value object.
      * That is to say, when event be constructed, the return value's specific
      * type is be definite.
      * <p>
