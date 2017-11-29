@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.wcscent.security.encrypt;
+package com.wcscent.commons.model;
 
 /**
  * @author hanpengfei
  */
-public interface EncryptionService {
+public interface Identifiable<ID> {
 
-    EncryptedValue encrypt(Object obj);
-
-    String algorthim();
+    /**
+     * The identify of identifiable
+     *
+     * @return implementor's identify
+     */
+    ID id();
 }
