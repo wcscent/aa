@@ -16,21 +16,77 @@
 
 package com.wcscent.commons.model;
 
+import com.wcscent.commons.vertify.Verifiable;
+
 import java.io.Serializable;
 
 /**
  * @author hanpengfei
  */
-public abstract class AbstractId implements Identification<String>, Serializable {
+public abstract class AbstractId implements Identifiable<String>, Serializable, Verifiable {
 
     private static final long serialVersionUID = -6757024589010218184L;
 
-    protected abstract int hashOddValue();
+    private String src;
 
-    protected abstract int hashPrimeryValue();
+    public AbstractId(String src) {
+        super();
+        setSrc(src);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof AbstractId)) {
+            return false;
+        }
+
+        AbstractId typedId = (AbstractId) o;
+        return src.equals(typedId.src);
+    }
+
+    @Override
+    public int hashCode() {
+        return (hashOddValue() * hashPrimaryValue())
+                + src.hashCode();
+    }
 
     @Override
     public String id() {
-        return null;
+        return src;
+    }
+
+    @Override
+    public void verify() throws Exception {
+        // default not implemented
+    }
+
+    /**
+     * Implementor's hash odd value.
+     *
+     * @return 0, default value or an odd value of hash code.
+     */
+    protected abstract int hashOddValue();
+
+    /**
+     * Implementor's hash primary value.
+     *
+     * @return 0, default value or primary of hash code.
+     */
+    protected abstract int hashPrimaryValue();
+
+    private void setSrc(String src) {
+        if (src == null) {
+            throw new IllegalArgumentException("Id's source must not be null.");
+        }
+        if (src.trim().length() == 0) {
+            throw new IllegalArgumentException("Id's source must not be empty.");
+        }
+        this.src = src;
     }
 }
