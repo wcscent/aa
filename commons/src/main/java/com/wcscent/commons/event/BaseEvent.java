@@ -19,7 +19,13 @@ package com.wcscent.commons.event;
 import java.util.Date;
 
 /**
+ * The class {@code BaseEvent}.
+ * This abstract class only is {@code Event}'s default implement.
+ * Should be used to an new event.
+ *
  * @author hanpengfei
+ * @see Event
+ * @see DomainEvent
  */
 public abstract class BaseEvent implements Event {
 
