@@ -159,6 +159,14 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
             setScope(scope);
         }
 
+        public Class<? extends Event> getEventClass() {
+            return eventClass;
+        }
+
+        public String getScope() {
+            return scope;
+        }
+
         private void setEventClass(Class<? extends Event> eventClass) {
             assert eventClass != null : "Event class shouldn't be null";
             this.eventClass = eventClass;
