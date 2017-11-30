@@ -24,7 +24,17 @@ import java.util.Date;
  */
 public interface Event extends Serializable {
 
+    /**
+     * Current event version, default is 1
+     *
+     * @return current event's version
+     */
     int version();
 
+    /**
+     * Occurred time
+     *
+     * @return the time of occurred time
+     */
     Date occurredOn();
 }
