@@ -28,7 +28,7 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
     private static final ThreadLocal<DomainEventPublisher> INSTANCES =
             ThreadLocal.withInitial(DomainEventPublisher::new);
 
-    private Map<SubscriberEntry, List<DomainEventSubscriber>> subscribers = new HashMap<>();
+    private Map<Entry, List<DomainEventSubscriber>> subscribers = new HashMap<>();
     private boolean publishing = false;
 
     private DomainEventPublisher() {
@@ -51,18 +51,18 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
             if (!getSubscribers().isEmpty()) {
 
                 final String scope = event.scope();
-                SubscriberEntry entry;
+                Entry entry;
 
                 // publish to current event's subscribers
-                entry = new SubscriberEntry(event.getClass(), scope);
+                entry = new Entry(event.getClass(), scope);
                 doPublish(entry, event);
 
                 // publish to domain event's subscribers
-                entry = new SubscriberEntry(DomainEvent.class, scope);
+                entry = new Entry(DomainEvent.class, scope);
                 doPublish(entry, event);
 
                 // publish to event's subscribers
-                entry = new SubscriberEntry(Event.class, scope);
+                entry = new Entry(Event.class, scope);
                 doPublish(entry, event);
             }
 
@@ -85,7 +85,7 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
                     subscriber.subscribeToClass();
             final String scope = subscriber.scope();
 
-            SubscriberEntry entry = new SubscriberEntry(subscribeToEvent, scope);
+            Entry entry = new Entry(subscribeToEvent, scope);
 
             List<DomainEventSubscriber> registeredSubscribers = getSubscribers().get(entry);
 
@@ -116,7 +116,7 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
         }
     }
 
-    public Map<SubscriberEntry, List<DomainEventSubscriber>> getSubscribers() {
+    public Map<Entry, List<DomainEventSubscriber>> getSubscribers() {
         return Collections.unmodifiableMap(subscribers);
     }
 
@@ -128,7 +128,7 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
         this.publishing = publishing;
     }
 
-    private void doPublish(SubscriberEntry entry, DomainEvent event) {
+    private void doPublish(Entry entry, DomainEvent event) {
         assert entry != null : "Domain event subscriber entry shouldn't be null.";
         assert event != null : "Domain event should't be null";
 
@@ -149,12 +149,12 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
         }
     }
 
-    private class SubscriberEntry {
+    private class Entry {
 
         private Class<? extends Event> eventClass;
         private String scope;
 
-        SubscriberEntry(Class<? extends Event> eventClass, String scope) {
+        Entry(Class<? extends Event> eventClass, String scope) {
             setEventClass(eventClass);
             setScope(scope);
         }
@@ -182,11 +182,11 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
             if (o == this) {
                 return true;
             }
-            if (!(o instanceof SubscriberEntry)) {
+            if (!(o instanceof Entry)) {
                 return false;
             }
 
-            SubscriberEntry entry = (SubscriberEntry) o;
+            Entry entry = (Entry) o;
             return eventClass.equals(entry.eventClass)
                     && scope.equals(entry.scope);
         }
