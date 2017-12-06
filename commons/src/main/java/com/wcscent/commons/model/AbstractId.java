@@ -16,7 +16,7 @@
 
 package com.wcscent.commons.model;
 
-import com.wcscent.commons.vertify.Verifiable;
+import com.wcscent.commons.validator.Verifiable;
 
 import java.io.Serializable;
 
