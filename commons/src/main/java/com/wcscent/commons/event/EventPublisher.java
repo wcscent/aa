@@ -16,6 +16,8 @@
 
 package com.wcscent.commons.event;
 
+import java.util.List;
+
 /**
  * Event publisher
  *
@@ -33,12 +35,19 @@ public interface EventPublisher<T extends Event, S extends EventSubscriber> {
     /**
      * Subscribe event subscriber
      *
-     * @param subscriber event subscribers
+     * @param subscriber event allSubscribers
      */
     void subscribe(S subscriber);
 
     /**
-     * Clear all subscribers to empty
+     * All subscribers of current publisher.
+     *
+     * @return subscriber list.
+     */
+    List allSubscribers();
+
+    /**
+     * Clear all allSubscribers to empty
      */
     void reset();
 }
