@@ -19,7 +19,7 @@ package com.wcscent.commons.event;
 /**
  * @author hanpengfei
  */
-public class DomainEventEntry extends EventEntry {
+public final class DomainEventEntry extends EventEntry {
 
     private String domain;
 
