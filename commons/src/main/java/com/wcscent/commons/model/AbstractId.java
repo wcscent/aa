@@ -23,7 +23,8 @@ import java.io.Serializable;
 /**
  * @author hanpengfei
  */
-public abstract class AbstractId implements Identifiable<String>, Serializable, Verifiable {
+public abstract class AbstractId
+    implements Identifiable<String>, Verifiable, Serializable {
 
     private static final long serialVersionUID = -6757024589010218184L;
 
@@ -53,7 +54,7 @@ public abstract class AbstractId implements Identifiable<String>, Serializable, 
     @Override
     public int hashCode() {
         return (hashOddValue() * hashPrimaryValue())
-                + src.hashCode();
+            + src.hashCode();
     }
 
     @Override
@@ -81,11 +82,8 @@ public abstract class AbstractId implements Identifiable<String>, Serializable, 
     protected abstract int hashPrimaryValue();
 
     private void setSrc(String src) {
-        if (src == null) {
-            throw new IllegalArgumentException("Id's source must not be null.");
-        }
-        if (src.trim().length() == 0) {
-            throw new IllegalArgumentException("Id's source must not be empty.");
+        if (src == null || src.trim().isEmpty()) {
+            throw new IllegalArgumentException("Must specific id source.");
         }
         this.src = src;
     }
