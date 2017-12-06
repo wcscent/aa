@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package com.wcscent.commons.vertify;
+package com.wcscent.commons.validator;
 
 /**
- * An sign interface. All implementors can be used to validate.
- *
  * @author hanpengfei
- * @see Validator
  */
-public interface Validatable {
+public interface Verifiable {
+
+    /**
+     * Verify current implementor.
+     *
+     * @throws Exception if verify throws exception.
+     */
+    void verify() throws Exception;
 }

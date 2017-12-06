@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wcscent.commons.vertify;
+package com.wcscent.commons.validator;
 
 /**
  * Validate interface. All validator's super class.
