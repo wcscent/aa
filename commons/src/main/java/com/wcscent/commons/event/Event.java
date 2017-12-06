@@ -16,13 +16,17 @@
 
 package com.wcscent.commons.event;
 
+import com.wcscent.commons.model.Identifiable;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * The {@code Event.class} is all event's super class.
+ *
  * @author hanpengfei
  */
-public interface Event extends Serializable {
+public interface Event extends Identifiable<String>, Serializable {
 
     /**
      * Current event version, default is 1
