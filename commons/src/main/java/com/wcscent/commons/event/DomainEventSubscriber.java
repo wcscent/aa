@@ -19,12 +19,13 @@ package com.wcscent.commons.event;
 /**
  * @author hanpengfei
  */
-public interface DomainEventSubscriber<T extends DomainEvent> extends EventSubscriber<T> {
+public interface DomainEventSubscriber<T extends Event>
+    extends EventSubscriber<T> {
 
     /**
-     * Implementors' limited scope
+     * Implementors' limited domain
      *
-     * @return the scope of current domain event
+     * @return the domain of current domain event
      */
-    String scope();
+    String domain();
 }
