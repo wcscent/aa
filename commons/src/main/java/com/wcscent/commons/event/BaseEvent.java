@@ -31,12 +31,19 @@ public abstract class BaseEvent implements Event {
 
     private static final long serialVersionUID = 6120774456808911390L;
 
+    private String id;
     private int version;
     private Date occurredOn;
 
-    protected BaseEvent() {
+    protected BaseEvent(String id) {
+        this.id = id;
         this.version = 1;
         this.occurredOn = new Date();
+    }
+
+    @Override
+    public String id() {
+        return id;
     }
 
     @Override
