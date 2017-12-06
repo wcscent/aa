@@ -16,20 +16,19 @@
 
 package com.wcscent.commons.event;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
- * The {@code DomainEvent} class // todo document
+ * The {@code DomainEvent} class
  *
  * @author hanpengfei
  */
-public final class DomainEventPublisher implements EventPublisher<DomainEvent, DomainEventSubscriber> {
+public final class DomainEventPublisher
+    extends AbstractEventPublisher<DomainEvent, EventSubscriber> {
 
     private static final ThreadLocal<DomainEventPublisher> INSTANCES =
-            ThreadLocal.withInitial(DomainEventPublisher::new);
-
-    private Map<Entry, List<DomainEventSubscriber>> subscribers = new HashMap<>();
-    private boolean publishing = false;
+        ThreadLocal.withInitial(DomainEventPublisher::new);
 
     private DomainEventPublisher() {
         super();
@@ -48,32 +47,30 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
         try {
             setPublishing(true);
 
-            if (!getSubscribers().isEmpty()) {
+            if (!allSubscribers().isEmpty()) {
 
-                final String scope = event.scope();
-                Entry entry;
+                final Class<? extends Event> eventClass = event.getClass();
+                String domain = event.domain();
 
-                // publish to current event's subscribers
-                entry = new Entry(event.getClass(), scope);
+                EventEntry entry;
+
+                if (eventClass != DomainEvent.class) {
+                    entry = new DomainEventEntry(eventClass, domain);
+                    doPublish(entry, event);
+                }
+
+                entry = new DomainEventEntry(DomainEvent.class, domain);
                 doPublish(entry, event);
 
-                // publish to domain event's subscribers
-                entry = new Entry(DomainEvent.class, scope);
-                doPublish(entry, event);
-
-                // publish to event's subscribers
-                entry = new Entry(Event.class, scope);
-                doPublish(entry, event);
+                publish2RootEvent(event);
             }
-
         } finally {
             setPublishing(false);
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void subscribe(DomainEventSubscriber subscriber) {
+    public void subscribe(EventSubscriber subscriber) {
         if (isPublishing()) {
             subscribe(subscriber);
         }
@@ -81,13 +78,22 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
         try {
             setPublishing(true);
 
-            final Class<? extends DomainEvent> subscribeToEvent =
-                    subscriber.subscribeToClass();
-            final String scope = subscriber.scope();
+            @SuppressWarnings("unchecked") final Class<? extends DomainEvent>
+                subscribeToEvent = subscriber.subscribeToClass();
 
-            Entry entry = new Entry(subscribeToEvent, scope);
+            String scope = null;
 
-            List<DomainEventSubscriber> registeredSubscribers = getSubscribers().get(entry);
+            if (isDomainEvent(subscribeToEvent)) {
+                DomainEventSubscriber domainEventSubscriber =
+                    (DomainEventSubscriber) subscriber;
+                scope = domainEventSubscriber.domain();
+            }
+
+            DomainEventEntry entry = new DomainEventEntry(subscribeToEvent,
+                scope);
+
+            List<EventSubscriber> registeredSubscribers = getSubscribers()
+                .get(entry);
 
             if (registeredSubscribers == null) {
                 registeredSubscribers = new LinkedList<>();
@@ -95,105 +101,26 @@ public final class DomainEventPublisher implements EventPublisher<DomainEvent, D
 
             registeredSubscribers.add(subscriber);
 
-            subscribers.put(entry, registeredSubscribers);
+            getSubscribers().put(entry, registeredSubscribers);
 
         } finally {
             setPublishing(false);
         }
     }
 
-    @Override
-    public void reset() {
-        if (isPublishing()) {
-            reset();
-        }
-
-        try {
-            setPublishing(true);
-            subscribers.clear();
-        } finally {
-            setPublishing(false);
-        }
+    private boolean isDomainEvent(Class clazz) {
+        return clazz == DomainEvent.class
+            || instanceOfDomainEvent(clazz.getClasses())
+            || instanceOfDomainEvent(clazz.getInterfaces());
     }
 
-    public Map<Entry, List<DomainEventSubscriber>> getSubscribers() {
-        return Collections.unmodifiableMap(subscribers);
-    }
-
-    private boolean isPublishing() {
-        return publishing;
-    }
-
-    private void setPublishing(boolean publishing) {
-        this.publishing = publishing;
-    }
-
-    private void doPublish(Entry entry, DomainEvent event) {
-        assert entry != null : "Domain event subscriber entry shouldn't be null.";
-        assert event != null : "Domain event should't be null";
-
-        List<DomainEventSubscriber> subscribers;
-
-        subscribers = getSubscribers().get(entry);
-        doPublish(subscribers, event);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void doPublish(List<DomainEventSubscriber> subscribers,
-                           DomainEvent event) {
-        if (subscribers == null || subscribers.isEmpty()) {
-            return;
-        }
-        for (DomainEventSubscriber subscriber : subscribers) {
-            subscriber.handle(event);
-        }
-    }
-
-    private class Entry {
-
-        private Class<? extends Event> eventClass;
-        private String scope;
-
-        Entry(Class<? extends Event> eventClass, String scope) {
-            setEventClass(eventClass);
-            setScope(scope);
-        }
-
-        public Class<? extends Event> getEventClass() {
-            return eventClass;
-        }
-
-        public String getScope() {
-            return scope;
-        }
-
-        private void setEventClass(Class<? extends Event> eventClass) {
-            assert eventClass != null : "Event class shouldn't be null";
-            this.eventClass = eventClass;
-        }
-
-        private void setScope(String scope) {
-            this.scope = scope;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            // todo 此处会造成同一域中不能存在多个订阅者同时订阅同一事件
-            if (o == this) {
+    private boolean instanceOfDomainEvent(Class[] classes) {
+        for (Class clazz : classes) {
+            if (isDomainEvent(clazz)) {
                 return true;
             }
-            if (!(o instanceof Entry)) {
-                return false;
-            }
-
-            Entry entry = (Entry) o;
-            return eventClass.equals(entry.eventClass)
-                    && scope.equals(entry.scope);
         }
-
-        @Override
-        public int hashCode() {
-            return (233 * 1470) + eventClass.hashCode() + scope.hashCode();
-        }
+        return false;
     }
+
 }
