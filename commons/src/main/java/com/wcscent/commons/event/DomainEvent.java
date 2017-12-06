@@ -16,9 +16,10 @@
 
 package com.wcscent.commons.event;
 
+
 /**
  * The {@code DomainEvent} is an {@code Event}'s subclass.
- * When one event occurred on one domain or it have limited scope,
+ * When one event occurred on one domain or it have limited domain,
  * this event should be published as an {@code DomainEvent}.
  * <p>
  * If an {@code DomainEvent} need to be published to other domain,
@@ -31,24 +32,25 @@ package com.wcscent.commons.event;
 public interface DomainEvent extends Event {
 
     /**
-     * Current event's scope. This scope is limited.
+     * Current event's domain. This domain is limited.
      * As an agreement, current domain event only should be used at its owner
      * domain.
-     * The scope may be current event's domain name or and private code.
+     * The domain may be current event's domain name or and private code.
      * The private code only be know on this domain.
      * <p>
      * When customer want custom an {@code DomainEvent}, may should verify the
-     * event's scope is same as customer's domain or no, before carry out other
+     * event's domain is same as customer's domain or no, before carry out other
      * business code.
-     * If {@code scope} is different, customer shouldn't do anything.
+     * If {@code domain} is different, customer shouldn't do anything.
      *
-     * @return current event's scope.
+     * @return current event's domain.
      */
-    String scope();
+    String domain();
 
     /**
      * Convert current event to an {@code ApplicationEvent}.
-     * The method as an factory method, may return different {@code ApplicationEvent}
+     * The method as an factory method, may return different {@code
+     * ApplicationEvent}
      * instance, when current event had different status.
      * <p>
      * But, in fact, all {@code Event} is an value object.
