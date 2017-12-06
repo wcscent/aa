@@ -16,9 +16,7 @@
 
 package com.wcscent.commons.event;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author hanpengfei
@@ -30,6 +28,20 @@ public abstract class AbstractEventPublisher
     private Map<EventEntry, List<EventSubscriber>> subscribers = new
         HashMap<>();
     private boolean publishing = false;
+
+    @Override
+    public List<EventSubscriber> allSubscribers() {
+        List<EventSubscriber> subscriberList = new LinkedList<>();
+        final Map<EventEntry, List<EventSubscriber>> currentSubscribers =
+            getSubscribers();
+
+        Set<EventEntry> keySet = currentSubscribers.keySet();
+        for (EventEntry key : keySet) {
+            List<EventSubscriber> subscribers = currentSubscribers.get(key);
+            subscriberList.addAll(subscribers);
+        }
+        return Collections.unmodifiableList(subscriberList);
+    }
 
     @Override
     public void reset() {
