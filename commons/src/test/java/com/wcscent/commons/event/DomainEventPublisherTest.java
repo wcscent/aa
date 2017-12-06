@@ -30,22 +30,22 @@ public class DomainEventPublisherTest extends Assert {
     private DomainEventPublisher publisher;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         publisher = DomainEventPublisher.getInstance();
     }
 
     @Test
-    public void getInstance() throws Exception {
+    public void getInstance() {
         assertNotNull(publisher);
     }
 
     @Test
-    public void testPublish() throws Exception {
+    public void testPublish() {
         publishEvent();
     }
 
     @Test
-    public void testSubscribe() throws Exception {
+    public void testSubscribe() {
         final boolean[] handled = {false};
         final String[] scope = new String[1];
 
@@ -74,7 +74,7 @@ public class DomainEventPublisherTest extends Assert {
     }
 
     @Test
-    public void testReset() throws Exception {
+    public void testReset() {
         int subscribersCount = 10;
 
         subscribeEvents(subscribersCount);
