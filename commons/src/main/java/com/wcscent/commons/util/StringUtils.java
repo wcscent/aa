@@ -23,7 +23,6 @@ public class StringUtils {
 
     private static final int DEFAULT_RANDOM_LENGTH = 64;
 
-
     public static String random() {
         return random(DEFAULT_RANDOM_LENGTH);
     }
