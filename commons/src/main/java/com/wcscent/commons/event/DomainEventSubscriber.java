@@ -23,9 +23,9 @@ public interface DomainEventSubscriber<T extends Event>
     extends EventSubscriber<T> {
 
     /**
-     * Implementors' limited domain
+     * Implementors' limit custom domain
      *
-     * @return the domain of current domain event
+     * @return the domain that current domain event can custom
      */
     String domain();
 }
