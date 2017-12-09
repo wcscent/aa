@@ -26,7 +26,7 @@ public interface EventSubscriber<T extends Event> {
      *
      * @return current subscriber subscribed class
      */
-    Class<T> subscribeToClass();
+    Class<T> subscribe2Class();
 
     /**
      * Handle event
