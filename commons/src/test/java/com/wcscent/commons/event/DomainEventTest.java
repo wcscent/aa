@@ -65,7 +65,7 @@ public abstract class DomainEventTest extends EventTest {
         }
 
         @Override
-        public Class<DomainEvent4Test> subscribeToClass() {
+        public Class<DomainEvent4Test> subscribe2Class() {
             return DomainEvent4Test.class;
         }
 
