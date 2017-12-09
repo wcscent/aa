@@ -21,19 +21,57 @@ import java.util.UUID;
 /**
  * @author hanpengfei
  */
-public class DomainEventTest extends BaseEvent implements DomainEvent {
+@SuppressWarnings("WeakerAccess")
+public abstract class DomainEventTest extends EventTest {
 
-    private static final long serialVersionUID = -2034233811215173760L;
+    protected static final String DOMAIN = "test";
 
-    private String scope;
-
-    protected DomainEventTest(String scope) {
-        super(UUID.randomUUID().toString());
-        this.scope = scope;
+    protected DomainEvent getEventCase() {
+        return new DomainEvent4Test();
     }
 
-    @Override
-    public String domain() {
-        return scope;
+    protected DomainEventSubscriber getSubscriberCase() {
+        return new DomainEventSubscriber4Test();
+    }
+
+    protected void handleEvent(DomainEvent event) {
+    }
+
+    protected class DomainEvent4Test extends BaseEvent implements DomainEvent {
+
+        private static final long serialVersionUID = -1817409823961382123L;
+
+        DomainEvent4Test() {
+            super(UUID.randomUUID().toString());
+        }
+
+        @Override
+        public String domain() {
+            return DOMAIN;
+        }
+
+        @Override
+        public ApplicationEvent toApplicationEvent() {
+            return null;
+        }
+    }
+
+    protected class DomainEventSubscriber4Test
+        implements DomainEventSubscriber<DomainEvent4Test> {
+
+        @Override
+        public String domain() {
+            return DOMAIN;
+        }
+
+        @Override
+        public Class<DomainEvent4Test> subscribeToClass() {
+            return DomainEvent4Test.class;
+        }
+
+        @Override
+        public void handle(DomainEvent4Test event) {
+            handleEvent(event);
+        }
     }
 }

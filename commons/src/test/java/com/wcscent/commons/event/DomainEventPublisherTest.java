@@ -16,26 +16,27 @@
 
 package com.wcscent.commons.event;
 
-import org.junit.Assert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author hanpengfei
  */
-public class DomainEventPublisherTest extends Assert {
+public class DomainEventPublisherTest extends DomainEventTest {
 
-    private static final String SCOPE = "test";
-
-    private DomainEventPublisher publisher;
+    private boolean handled = false;
+    private String domain;
 
     @Before
     public void setUp() {
         publisher = DomainEventPublisher.getInstance();
+        event = getEventCase();
+        subscriber = getSubscriberCase();
     }
 
     @Test
-    public void getInstance() {
+    public void testGetInstance() {
         assertNotNull(publisher);
     }
 
@@ -46,74 +47,33 @@ public class DomainEventPublisherTest extends Assert {
 
     @Test
     public void testSubscribe() {
-        final boolean[] handled = {false};
-        final String[] scope = new String[1];
-
-        publisher.subscribe(new DomainEventSubscriber<DomainEventTest>() {
+        //noinspection unchecked
+        publisher.subscribe(new DomainEventSubscriber4Test() {
             @Override
-            public String domain() {
-                return SCOPE;
-            }
-
-            @Override
-            public Class<DomainEventTest> subscribeToClass() {
-                return DomainEventTest.class;
-            }
-
-            @Override
-            public void handle(DomainEventTest event) {
-                handled[0] = true;
-                scope[0] = event.domain();
+            public void handle(DomainEvent4Test event) {
+                handled = true;
+                domain = event.domain();
             }
         });
 
         publishEvent();
 
-        assertTrue(handled[0]);
-        assertEquals(scope[0], SCOPE);
+        assertTrue(handled);
+        assertEquals(domain, DOMAIN);
     }
 
     @Test
     public void testReset() {
-        int subscribersCount = 10;
-
-        subscribeEvents(subscribersCount);
-
-        assertEquals(publisher.allSubscribers().size(), subscribersCount);
+        int count = 10;
+        subscribeEvents(count);
+        assertEquals(publisher.allSubscribers().size(), count);
 
         publisher.reset();
-
         assertTrue(publisher.allSubscribers().isEmpty());
     }
 
-    private void publishEvent() {
-        publisher.publish(new DomainEventTest(SCOPE));
-    }
-
-    private void subscribeEvent() {
-        DomainEventSubscriber subscriber = new
-            DomainEventSubscriber<DomainEventTest>() {
-                @Override
-                public String domain() {
-                    return SCOPE;
-                }
-
-                @Override
-                public Class<DomainEventTest> subscribeToClass() {
-                    return DomainEventTest.class;
-                }
-
-                @Override
-                public void handle(DomainEventTest event) {
-                }
-            };
-
-        DomainEventPublisher.getInstance().subscribe(subscriber);
-    }
-
-    private void subscribeEvents(int count) {
-        for (int i = 0; i < count; i++) {
-            subscribeEvent();
-        }
+    @After
+    public void tearDown() {
+        handled = false;
     }
 }

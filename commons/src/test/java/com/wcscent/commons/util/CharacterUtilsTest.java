@@ -14,12 +14,26 @@
  * limitations under the License.
  */
 
-package com.wcscent.commons.validate;
+package com.wcscent.commons.util;
+
+import com.wcscent.commons.BaseTest;
+import org.junit.Test;
 
 /**
  * @author hanpengfei
  */
-public interface Validatable {
+public class CharacterUtilsTest extends BaseTest {
 
-    void validate();
+    @Test
+    public void randomCharacter() {
+    }
+
+    @Test
+    public void testIsSeparatorChars() {
+        char[] chars = {
+            'a', 'b', 'c'
+        };
+
+        assertTrue(CharacterUtils.isSeparatorChars('c', chars));
+    }
 }
