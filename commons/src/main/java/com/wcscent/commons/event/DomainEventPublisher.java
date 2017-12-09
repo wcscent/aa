@@ -79,7 +79,7 @@ public final class DomainEventPublisher
             setPublishing(true);
 
             @SuppressWarnings("unchecked") final Class<? extends DomainEvent>
-                subscribeToEvent = subscriber.subscribeToClass();
+                subscribeToEvent = subscriber.subscribe2Class();
 
             String scope = null;
 
