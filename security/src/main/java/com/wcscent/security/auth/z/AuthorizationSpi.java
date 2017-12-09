@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.wcscent.commons.model;
+package com.wcscent.security.auth.z;
 
 /**
  * @author hanpengfei
  */
-public interface Identification<ID> {
+public interface AuthorizationSpi {
 
-    ID id();
 }
