@@ -17,7 +17,11 @@
 package com.wcscent.commons.util.identity;
 
 /**
+ * All identity generator's super class.
+ *
  * @author hanpengfei
  */
 public interface IdentityGenerator {
+
+    String generate();
 }
