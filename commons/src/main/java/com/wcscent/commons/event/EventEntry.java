@@ -42,7 +42,6 @@ public class EventEntry {
     public boolean equals(Object o) {
         return this == o || o instanceof EventEntry && getEventClass().equals
             (((EventEntry) o).getEventClass());
-
     }
 
     @Override
