@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.wcscent.commons.util.identity;
+package com.wcscent.commons.logger;
 
 /**
  * @author hanpengfei
  */
-public final class Snowflake implements IdentityGenerator {
+public interface LoggerManager {
+
 }
